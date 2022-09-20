@@ -28,8 +28,8 @@ import app.workers.dao.FileDaoItf;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class A_FileDaoTest {
   static final String NOM_DOSSIER_DATA = "data";
-  static final String NOM_FICHIER_LOC = "npa_ch_20140818_utf8.txt";
-  static final String NOM_FICHIER_DEP = "departements_utf8.txt";
+  static final String NOM_FICHIER_LOC = "npa_ch_20140818.txt";
+  static final String NOM_FICHIER_DEP = "departements.txt";
 
   @BeforeClass
   public static void setUpClass() throws Exception {

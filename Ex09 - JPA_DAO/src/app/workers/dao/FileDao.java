@@ -14,11 +14,10 @@ import java.util.List;
  * @author Jean-Claude Stritt
  */
 public class FileDao<E> implements FileDaoItf<E> {
-
   private BeanExtracter<E> extracteur;
 
   public FileDao(BeanExtracter<E> extracteur) {
-    this.extracteur = extracteur;
+    this.extracteur = extracteur;  
   }
 
   /**

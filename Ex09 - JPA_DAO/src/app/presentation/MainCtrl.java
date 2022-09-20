@@ -1,6 +1,9 @@
 package app.presentation;
 
 
+import app.beans.Departement;
+import app.beans.Localite;
+import app.beans.Personne;
 import app.exceptions.MyDBException;
 import app.helpers.DateTimeLib;
 import app.helpers.JfxPopup;
@@ -32,7 +35,7 @@ import javafx.stage.Stage;
  */
 public class MainCtrl implements Initializable {
 
-    final static private String PU = "PU_MYSQL";
+    final static private String PU = "Ex09_-_JPA_DAOPU";
 
     private DbWorker dbWrk;
     private PersonneManager persMan;
@@ -67,9 +70,9 @@ public class MainCtrl implements Initializable {
     @FXML
     private DatePicker dateNaissance;
     @FXML
-    private ComboBox<?> cbxLocalite;
+    private ComboBox<Localite> cbxLocalite;
     @FXML
-    private ComboBox<?> cbxDepartement;
+    private ComboBox<Departement> cbxDepartement;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -144,7 +147,7 @@ public class MainCtrl implements Initializable {
     private void menuEffacer(ActionEvent event) {
         try {
             dbWrk.effacerPersonne(persMan.personneCourante());
-            persMan.setListe(dbWrk.lirePersonnes());
+            persMan.setListe(dbWrk.lirePersonnes());            
             afficherPersonne(persMan.personneCourante());
         } catch (MyDBException ex) {
             JfxPopup.displayError("ERREUR", null, ex.getMessage());
@@ -299,7 +302,12 @@ public class MainCtrl implements Initializable {
     }
 
     @FXML
-    private void menuRechercher(ActionEvent event) {
+    private void menuRechercher(ActionEvent event) throws MyDBException {       
         String nomARechercher = JfxPopup.askInfo("Recherche", "Rechercher une personne avec le son nom", "Insérer le nom à rechercher");
+        if (nomARechercher != null && !nomARechercher.isEmpty()) {          
+            Personne personne = dbWrk.rechercherPersonneAvecNom(nomARechercher);
+            afficherPersonne(personne);
+            persMan.personneRecheche(personne);
+        }      
     }
 }
