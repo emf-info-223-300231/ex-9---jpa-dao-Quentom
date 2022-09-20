@@ -47,6 +47,14 @@ public class JpaDao<E, PK> implements JpaDaoItf<E, PK> {
      */
     @Override
     public void creer(E e) throws MyDBException {
+        try {
+            et.begin();
+            em.persist(e);           
+            et.commit();
+        } catch (Exception ex) {
+            et.rollback();
+            throw new MyDBException(SystemLib.getFullMethodName(), ex.getMessage());
+        }
     }
 
     /**
@@ -60,11 +68,14 @@ public class JpaDao<E, PK> implements JpaDaoItf<E, PK> {
     public E lire(PK pk) throws MyDBException {
         E e = null;
         try {
+            et.begin();
             e = em.find(cl, pk);
+            et.commit();
             if (e != null) {
                 em.refresh(e);
             }
         } catch (Exception ex) {
+            et.rollback();
             throw new MyDBException(SystemLib.getFullMethodName(), ex.getMessage());
         }
         return e;
@@ -156,7 +167,10 @@ public class JpaDao<E, PK> implements JpaDaoItf<E, PK> {
     @Override
     @SuppressWarnings("unchecked")
     public E rechercher(String prop, Object valeur) throws MyDBException {
-        return null;
+        
+        Query query = em.createQuery("SELECT p FROM Personne p WHERE p." + prop + " = :val");
+        query.setParameter("val", valeur);
+        return (E) query.getSingleResult();
     }
 
     /**
@@ -188,7 +202,18 @@ public class JpaDao<E, PK> implements JpaDaoItf<E, PK> {
      */
     @Override
     public int effacerListe() throws MyDBException {
-        int nb;
+        int nb = 0;
+        try {
+            et.begin();
+            for (E e : lireListe()) {
+                em.remove(e);
+                nb++;
+            }
+            et.commit();
+        } catch (Exception ex) {
+            et.rollback();
+            throw new MyDBException(SystemLib.getFullMethodName(), ex.getMessage());
+        }
         return nb;
     }
 
@@ -202,6 +227,17 @@ public class JpaDao<E, PK> implements JpaDaoItf<E, PK> {
     @Override
     public int sauverListe(List<E> list) throws MyDBException {
         int nb = 0;
+        try {
+            et.begin();
+            for (E e : list) {
+                em.merge(e);
+                nb++;
+            }
+            et.commit();
+        } catch (Exception ex) {
+            et.rollback();
+            throw new MyDBException(SystemLib.getFullMethodName(), ex.getMessage());
+        }
         return nb;
     }
 

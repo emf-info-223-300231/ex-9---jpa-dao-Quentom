@@ -29,12 +29,28 @@ public class PersonneManager {
 
     public Personne personneCourante() {
         Personne p = null;
-        if (!liste.isEmpty()) {
-            p = liste.get(index);
+        if (!liste.isEmpty()) {      
+            if (index >= liste.size()) {
+              p = liste.get(index-1);
+              index = index-1;
+            }else{
+              p = liste.get(index);
+            }               
         }
         return p;
     }
 
+     public Personne personneRecheche(Personne p) {
+        int nb = -1;
+        for (Personne pers : liste) {
+            nb++;
+            if (pers == p) {
+                index = nb;
+            }
+        }       
+        return personneCourante();
+    }
+     
     public Personne personnePrecedente() {
         index = Math.max(0, index - 1);
         return personneCourante();

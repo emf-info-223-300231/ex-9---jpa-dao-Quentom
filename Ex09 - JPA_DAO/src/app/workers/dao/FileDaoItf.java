@@ -10,7 +10,7 @@ import java.util.List;
  * @author Jean-Claude Stritt
  */
 public interface FileDaoItf<E> {
-
+    
   public List<E> lireFichierTexte( File fichier, String nomCharset ) throws MyFileException;
 
 }
